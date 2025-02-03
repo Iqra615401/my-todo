@@ -12,10 +12,10 @@ export default function Signup() {
   const [labelData, setLabelData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSignUp = async () => {
     try {
       const { data } = await axios.post(
-        `  https://workstation-arts-dear-divx.trycloudflare.com/api/users/signup`,
+        `https://friendship-tired-merge-sitting.trycloudflare.com/api/users/signup`,
         labelData
       );
       console.log("data--", data);
@@ -90,7 +90,7 @@ export default function Signup() {
       <Button
         variant="contained"
         sx={{ bgcolor: "#993300", color: "white" }}
-        onClick={handleSubmit}
+        onClick={handleSignUp}
       >
         Sign Up
       </Button>

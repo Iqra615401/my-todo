@@ -1,33 +1,70 @@
-import React, { useState } from 'react'
-import axios from 'axios';
-import { TextField, Typography , Card , Button , Box } from '@mui/material'
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { TextField, Typography, Card, Button, Box } from "@mui/material";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useNavigate } from "react-router-dom";
 
-
-
 export default function TodoList() {
-  const [title , setTitle] = useState("")
+  const [title, setTitle] = useState("");
   const navigate = useNavigate();
-
-
+  const header = { "Access-Control-Allow-Origin": "*" };
 
   const handleAddTodo = (e) => {
     e.preventDefault();
-    console.log("clicked");
+  
+    const accessToken = localStorage.getItem("accessToken");
+  
+    if (!accessToken) {
+      console.error("No access token found. User is not authenticated.");
+      return;
+    }
+  
     axios
-      .post("https://fakestoreapi.com/products/1", { name: title })
+      .post(
+        "https://friendship-tired-merge-sitting.trycloudflare.com/api/todos/create",
+        {
+          title, 
+          header,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, 
+          },
+        }
+      )
       .then(() => {
         navigate("/listupdate");
       })
       .catch((error) => {
-        console.error("Error adding todo:", error);
+        console.error("Error adding todo:", error.response?.data || error);
       });
-};
+  };
+  
+  
+
+
+  // const handleAddTodo = async (e) => {
+  //   e.preventDefault();
+  //   if (!title.trim()) {
+  //     alert("Please enter a title before adding a todo!");
+  //     return;
+  //   }
+
+  //   try {
+  //     await axios.get("https://george-divisions-spokesman-lexington.trycloudflare.com/api/todos/create", {
+  //       name: title,
+  //     });
+  //     navigate("/listupdate");
+  //   } catch (error) {
+  //     console.error("Error adding todo:", error);
+  //     alert("Failed to add the todo. Please try again.");
+  //   }
+  // };
+
   return (
     <>
-       <Card
+      <Card
         sx={{
           width: "100%",
           maxWidth: 600,
@@ -35,40 +72,35 @@ export default function TodoList() {
           padding: 4,
           borderRadius: "20px",
           alignItems: "center",
-          marginX: "450px",
-          mt: "150px",
+          marginX: "auto",
+          marginTop: "150px",
         }}
       >
-        <Typography variant="h3" sx={{ color: "#993300", mt: "40px" }}>
-          TODO  LIST
+        <Typography variant="h3" sx={{ color: "#993300", marginTop: "40px" }}>
+          TODO LIST
         </Typography>
 
-
-        <Box
-          sx={{ display: "flex", alignItems: "center", m: "10px", mt: "30px" }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center", margin: "10px", marginTop: "30px" }}>
           <EditNoteIcon sx={{ color: "#993300" }} />
-          &nbsp; &nbsp;
           <TextField
             label="Enter Title"
             variant="standard"
-            name="Enter Title"
-            type="Enter Title"
             fullWidth
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Box>
-<br/>
+        <br />
 
-         <Button
+        <Button
           variant="contained"
-          sx={{ bgcolor: "#993300", mt: "15px" }}
+          sx={{ bgcolor: "#993300", marginTop: "15px" }}
           onClick={handleAddTodo}
         >
-          <ControlPointIcon  variant="contained" sx={{ mr: 1 }} />
+          <ControlPointIcon sx={{ marginRight: 1 }} />
           Add Todo
         </Button>
-         </Card>
+      </Card>
     </>
-  )
+  );
 }

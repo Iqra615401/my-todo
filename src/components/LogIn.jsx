@@ -15,13 +15,16 @@ export default function LogIn() {
   const navigate = useNavigate();
 
 
-  const habdleLog = async () => {
+  const handleLog = async () => {
+
     try {
-      const { data } = await axios.post(
-        `  https://workstation-arts-dear-divx.trycloudflare.com/api/users/login`,
+      const { data } = await axios.post(`https://friendship-tired-merge-sitting.trycloudflare.com/api/users/login`,
         labelData
       );
-      console.log("data--", data);
+
+      console.log("data--", data.access_token);
+      localStorage.setItem("accessToken", data.access_token);
+
       alert(data.message || "Sign up successfully");
       navigate("/todolist");
     } catch (error) {
@@ -74,7 +77,6 @@ export default function LogIn() {
         sx={{ display: "flex", alignItems: "center", mb: 4 }}
       >
         <LockIcon sx={{ mr: 2, color: "#993300" }} />
-        &nbsp; &nbsp;
         <TextField
           label="Password"
           variant="standard"
@@ -99,7 +101,7 @@ export default function LogIn() {
         />
       </Box>
       <br/>
-      <Button variant="contained" sx={{bgcolor:"#993300", color : "white"}}onClick={habdleLog}>Log In</Button>
+      <Button variant="contained" sx={{bgcolor:"#993300", color : "white"}}onClick={handleLog}>Log In</Button>
     </Card>
   </>
   )
